@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorHelper", "ColorHelper\ColorHelper.csproj", "{5B47FC54-F794-44D3-9E74-962208BAE564}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XHHelper", "XHHelper\XHHelper.csproj", "{5B47FC54-F794-44D3-9E74-962208BAE564}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1Tests", "TestProject1Tests\TestProject1Tests.csproj", "{72B62881-7757-4069-AE96-799BC075C150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1Tests", "TestProject1Tests\TestProject1Tests.csproj", "{72B62881-7757-4069-AE96-799BC075C150}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

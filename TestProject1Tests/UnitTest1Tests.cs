@@ -1,8 +1,4 @@
-﻿using System.Diagnostics;
-using System.Drawing;
-using ColorHelper;
-using ColorHelper.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestProject1.Tests
 {
@@ -13,6 +9,7 @@ namespace TestProject1.Tests
         public void Test1Test()
         {
 
+<<<<<<< HEAD
             var colors = new ColorsModel[]
             {
                  new ColorsModel { Colors = ColorTranslator.FromHtml("#00aeff"), X =7, Y = -5 },
@@ -32,6 +29,8 @@ namespace TestProject1.Tests
                 sw.Stop();
                 Debug.WriteLine($"图色次数{i}; 坐标X:{color.X},坐标Y:{color.Y}  耗时：{sw.Elapsed.TotalMilliseconds}ms");
             }
+=======
+>>>>>>> 74064d412ce6e6ebfe66d2a3c2213e7b33ca7ba7
         }
         private Bitmap GetScreenCapture()
         {
