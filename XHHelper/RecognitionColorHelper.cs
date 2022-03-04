@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using XHHelper.Model;
+using XHHelper.XHExceptions;
 
 namespace XHHelper
 {
@@ -23,6 +25,7 @@ namespace XHHelper
         /// <param name="deviascope">偏移值最大100</param>
         /// <param name="colors">大概位置定位</param>
         /// <exception cref="NullReferenceException">未找到定位点图色|未找到图色定位</exception>
+       [DebuggerStepThrough]
         public static ColorSize ColourDiscern(ref Bitmap bitmap, short x1, short y1, short x2, short y2, Color anchorPoint, byte deviascope = 80, params ColorsModel[] colors)
         {
             if (deviascope > 100) deviascope = 100;
@@ -38,10 +41,12 @@ namespace XHHelper
                 short len = 0;//当前查找位置
                 var positionings = GetColourSize(bitmap, anchorPoint, positioning.X, positioning.Y);
                 positioning = positionings;
-                if (positioning.IsNull) throw new NullReferenceException("未找到定位点图色");
+                if (positioning.IsNull) throw new NullColorException("未找到定位点图色");
                 foreach (var d in colors)
                 {
-                    if (bitmap.GetPixel(positioning.X + d.X, positioning.Y + d.Y) == d.Colors)
+                    var y = positioning.Y + d.Y;
+                    var x = positioning.X + d.X;
+                    if (bitmap.GetPixel((x<1?0: x), (y<1?0: y)) == d.Colors)//坐标不能小于0
                     {
                         len++;
                     }
@@ -53,7 +58,7 @@ namespace XHHelper
                     return positioning;
                 }
             }
-            throw new NullReferenceException("未找到图色定位");
+            throw new NullColorException("未找到图色定位");
         }
 
         /// <summary>

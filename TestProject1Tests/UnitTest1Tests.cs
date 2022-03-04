@@ -1,4 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Diagnostics;
+using System.Drawing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using XHHelper;
+using XHHelper.Model;
 
 namespace TestProject1.Tests
 {
@@ -8,8 +13,6 @@ namespace TestProject1.Tests
         [TestMethod()]
         public void Test1Test()
         {
-
-<<<<<<< HEAD
             var colors = new ColorsModel[]
             {
                  new ColorsModel { Colors = ColorTranslator.FromHtml("#00aeff"), X =7, Y = -5 },
@@ -21,16 +24,21 @@ namespace TestProject1.Tests
                  new ColorsModel { Colors = ColorTranslator.FromHtml("#ffffff"), X =-6, Y = -9 },
             };
             ///找Docker图标
-            for (int i = 0; i < 20; i++)
+            while(true)
             {
-                var data = GetScreenCapture();//截图
-                var sw = Stopwatch.StartNew();
-                var color = RecognitionColorHelper.ColourDiscern(ref data, 0, 0, 0, 0, ColorTranslator.FromHtml("#00aeff"), 60, colors);
-                sw.Stop();
-                Debug.WriteLine($"图色次数{i}; 坐标X:{color.X},坐标Y:{color.Y}  耗时：{sw.Elapsed.TotalMilliseconds}ms");
+                try
+                {
+                    var data = GetScreenCapture();//截图
+                    var sw = Stopwatch.StartNew();
+                    var color = RecognitionColorHelper.ColourDiscern(ref data, 0, 0, 0, 0, ColorTranslator.FromHtml("#00aeff"), 60, colors);
+                    sw.Stop();
+                    Debug.WriteLine($"坐标X:{color.X},坐标Y:{color.Y}  耗时：{sw.Elapsed.TotalMilliseconds}ms");
+                    Debug.Close();
+                }
+                catch (Exception)
+                {
+                }
             }
-=======
->>>>>>> 74064d412ce6e6ebfe66d2a3c2213e7b33ca7ba7
         }
         private Bitmap GetScreenCapture()
         {
