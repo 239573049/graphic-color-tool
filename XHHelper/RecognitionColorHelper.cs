@@ -26,7 +26,7 @@ namespace XHHelper
         /// <param name="colors">大概位置定位</param>
         /// <exception cref="NullReferenceException">未找到定位点图色|未找到图色定位</exception>
        [DebuggerStepThrough]
-        public static ColorSize ColourDiscern(ref Bitmap bitmap, short x1, short y1, short x2, short y2, Color anchorPoint, byte deviascope = 80, params ColorsModel[] colors)
+        public static ColorSize ColorDiscern(ref Bitmap bitmap, short x1, short y1, short x2, short y2, Color anchorPoint, byte deviascope = 80, params ColorsModel[] colors)
         {
             if (deviascope > 100) deviascope = 100;
             if (deviascope < 1) deviascope = 1;
@@ -49,6 +49,12 @@ namespace XHHelper
                     if (bitmap.GetPixel((x<1?0: x), (y<1?0: y)) == d.Colors)//坐标不能小于0
                     {
                         len++;
+                    }
+                    if (StringHelper.CalculatePercentage(len, colors.Length) >= deviascope)
+                    {
+                        positioning.X += x1;
+                        positioning.Y += y1;
+                        return positioning;
                     }
                 }
                 if (StringHelper.CalculatePercentage(len, colors.Length) >= deviascope)
@@ -73,9 +79,64 @@ namespace XHHelper
         /// <param name="anchorPoint">第一个颜色点（定位点）</param>
         /// <param name="deviascope">偏移值最大100</param>
         /// <param name="colors">大概位置定位</param>
-        public static async Task<ColorSize> ColourDiscernAsync(Bitmap bitmap, short x1, short y1, short x2, short y2, Color anchorPoint, byte deviascope = 80, params ColorsModel[] colors)
+        /// <exception cref="NullReferenceException">未找到定位点图色|未找到图色定位</exception>
+        public static ColorSize ColorDiscern(ref Bitmap bitmap, short x1, short y1, short x2, short y2, string anchorPoint, byte deviascope = 80, params ColorsModel[] colors)
         {
-            return await Task.Run(() => ColourDiscern(ref bitmap, x1, y1, x2, y2, anchorPoint, deviascope, colors));
+            return ColorDiscern(ref bitmap, x1, y1, x2, y2, anchorPoint.StartsWith("#")?ColorTranslator.FromHtml(anchorPoint): ColorTranslator.FromHtml("#"+anchorPoint), deviascope,colors);
+        }
+        /// <summary>
+        /// 图色识别
+        /// 切图坐标(0,0,0,0)时不切图
+        /// </summary>
+        /// <param name="bitmap">图片源</param>
+        /// <param name="x1">左上x</param>
+        /// <param name="y1">左上y</param>
+        /// <param name="x2">左下x</param>
+        /// <param name="y2">左下y</param>
+        /// <param name="anchorPoint">第一个颜色点（定位点）</param>
+        /// <param name="deviascope">偏移值最大100</param>
+        /// <param name="colors">大概位置定位</param>
+        public static async Task<ColorSize> ColorDiscernAsync(Bitmap bitmap, short x1, short y1, short x2, short y2, Color anchorPoint, byte deviascope = 80, params ColorsModel[] colors)
+        {
+            return await Task.Run(() => ColorDiscern(ref bitmap, x1, y1, x2, y2, anchorPoint, deviascope, colors));
+        }
+        /// <summary>
+        /// 图色识别
+        /// 切图坐标(0,0,0,0)时不切图
+        /// </summary>
+        /// <param name="bitmap">图片源</param>
+        /// <param name="x1">左上x</param>
+        /// <param name="y1">左上y</param>
+        /// <param name="x2">左下x</param>
+        /// <param name="y2">左下y</param>
+        /// <param name="anchorPoint">第一个颜色点（定位点）</param>
+        /// <param name="deviascope">偏移值最大100</param>
+        /// <param name="colors">大概位置定位</param>
+        /// <returns></returns>
+        /// <exception cref="FigureColorProcessingException"></exception>
+        public static ColorSize ColorDiscern(ref Bitmap bitmap, short x1, short y1, short x2, short y2,string anchorPoint,string colors,byte deviascope = 80)
+        {
+            var anchorPointColor = ColorTranslator.FromHtml(anchorPoint.StartsWith("#")? anchorPoint : "#" +anchorPoint);
+            var colorDataModel = colors.Split(",");
+            var colorsModel = new ColorsModel[colorDataModel.Length];
+            try
+            {
+                for (int i = 0; i < colorDataModel.Length; i++)
+                {
+                    var colorData = colorDataModel[i].Split("|");
+                    colorsModel[i] = new ColorsModel
+                    {
+                        X = Convert.ToInt16(colorData[0]),
+                        Y = Convert.ToInt16(colorData[1]),
+                        Colors = ColorTranslator.FromHtml(colorData[2].StartsWith("#") ? colorData[2]:"#" + colorData[2])
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                throw new FigureColorProcessingException("图色处理异常，请检查图色数据",e);
+            }
+            return ColorDiscern(ref bitmap, x1, y1, x2, y2, anchorPointColor, deviascope, colorsModel);
         }
         /// <summary>
         /// 判断颜色是否一致
