@@ -26,13 +26,21 @@ namespace TestProject1.Tests
             ///找Docker图标
             for (int i = 0; i < 20; i++)
             {
-                var data = new Bitmap("cs.png");
+                var data = GetScreenCapture();//截图
                 var sw = Stopwatch.StartNew();
                 var color = RecognitionColorHelper.ColourDiscern(ref data, 0, 0, 0, 0, ColorTranslator.FromHtml("#00aeff"), 60, colors);
                 sw.Stop();
                 Debug.WriteLine($"图色次数{i}; 坐标X:{color.X},坐标Y:{color.Y}  耗时：{sw.Elapsed.TotalMilliseconds}ms");
-
             }
+        }
+        private Bitmap GetScreenCapture()
+        {
+            Rectangle tScreenRect = new Rectangle(0, 0, 1920, 1080);
+            Bitmap tSrcBmp = new Bitmap(tScreenRect.Width, tScreenRect.Height); // 用于屏幕原始图片保存
+            Graphics gp = Graphics.FromImage(tSrcBmp);
+            gp.CopyFromScreen(0, 0, 0, 0, tScreenRect.Size);
+            gp.DrawImage(tSrcBmp, 0, 0, tScreenRect, GraphicsUnit.Pixel);
+            return tSrcBmp;
         }
     }
 }

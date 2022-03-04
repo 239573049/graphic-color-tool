@@ -45,6 +45,8 @@ namespace ColorHelper
                 }
                 if (StringHelper.CalculatePercentage(len, colors.Length) >= deviascope)
                 {
+                    positioning.X += x1;
+                    positioning.Y += y1;
                     return positioning;
                 }
             }
